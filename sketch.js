@@ -4,7 +4,7 @@ var acts = [];
 var clicked = [];
 
 function setup() {
-  createCanvas(700, 500);
+  createCanvas(700, 600);
 
   for (var i = 0; i < 4; i++) {
     x = random(0, width - 100);
