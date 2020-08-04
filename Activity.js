@@ -25,7 +25,7 @@ class Activity {
     }
 
     //main box
-    fill(200, 0, 200);
+    fill(0, 100, 200);
     rect(this.x, this.y, this.width, this.height);
 
     fill(200, 200, 0);

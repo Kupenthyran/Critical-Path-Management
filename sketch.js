@@ -1,5 +1,5 @@
-var x;
-var y;
+//Next TODO: Add 'add more activity' feature
+
 var acts = [];
 var clickedActs = {};
 var mouseDown = false;
@@ -7,6 +7,8 @@ var mouseDown = false;
 function setup() {
   createCanvas(700, 500);
 
+  let x;
+  let y;
   for (var i = 0; i < 4; i++) {
     x = random(0, width - 100);
     y = random(0, height - 100);
