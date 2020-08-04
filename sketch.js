@@ -1,7 +1,8 @@
 var x;
 var y;
 var acts = [];
-var clicked = [];
+var clickedActs = {};
+var mouseDown = false;
 
 function setup() {
   createCanvas(700, 500);
@@ -16,7 +17,26 @@ function setup() {
 function draw() {
   background(51);
 
-  checkConnection();
+  if (mouseDown) {
+    stroke(255);
+    strokeWeight(5);
+    if (clickedActs.left) {
+      line(
+        clickedActs.left.x,
+        clickedActs.left.y + clickedActs.left.height / 2,
+        mouseX,
+        mouseY
+      );
+    } else if (clickedActs.right) {
+      line(
+        clickedActs.right.x + clickedActs.right.width,
+        clickedActs.right.y + clickedActs.right.height / 2,
+        mouseX,
+        mouseY
+      );
+    }
+  }
+
   for (var i = 0; i < acts.length; i++) {
     acts[i].showEdges();
   }
@@ -27,48 +47,94 @@ function draw() {
 }
 
 function checkConnection() {
-  if (clicked.length == 2) {
-    if (clicked[0] != clicked[1]) {
-      if (!clicked[1].predecessors.includes(clicked[0])) {
-        clicked[1].predecessors.push(clicked[0]);
-      }
-    }
-    clicked = [];
+  if (
+    Object.keys(clickedActs).length == 2 &&
+    clickedActs.left != clickedActs.right &&
+    !clickedActs.left.predecessors.includes(clickedActs.right)
+  ) {
+    clickedActs.left.predecessors.push(clickedActs.right);
   }
+
+  clickedActs = {};
 }
 
 function mousePressed() {
+  mouseDown = true;
   for (var i = acts.length - 1; i >= 0; i--) {
-    if (
-      mouseX > acts[i].x &&
-      mouseX < acts[i].x + acts[i].width &&
-      mouseY > acts[i].y &&
-      mouseY < acts[i].y + acts[i].height
-    ) {
+    if (clickedMainBox(acts[i])) {
       acts[i].selected = true;
       acts.push(acts[i]);
       var index = acts.indexOf(acts[i]);
       acts.splice(index, 1);
       break;
+    } else if (clickedRightBox(acts[i])) {
+      clickedActs.right = acts[i];
+    } else if (clickedLeftBox(acts[i])) {
+      clickedActs.left = acts[i];
     }
   }
 }
 
 function mouseReleased() {
-  for (var i = 0; i < acts.length; i++) {
+  mouseDown = false;
+  for (var i = acts.length - 1; i >= 0; i--) {
     acts[i].selected = false;
+
+    if (clickedRightBox(acts[i])) {
+      clickedActs.right = acts[i];
+    } else if (clickedLeftBox(acts[i])) {
+      clickedActs.left = acts[i];
+    }
   }
+  checkConnection();
 }
 
 function doubleClicked() {
-  for (var i = 0; i < acts.length; i++) {
-    if (
-      mouseX > acts[i].x &&
-      mouseX < acts[i].x + acts[i].width &&
-      mouseY > acts[i].y &&
-      mouseY < acts[i].y + acts[i].height
-    ) {
-      clicked.push(acts[i]);
+  for (var i = acts.length - 1; i >= 0; i--) {
+    if (clickedRightBox(acts[i])) {
+      let activity = acts[i];
+      for (var i = acts.length - 1; i >= 0; i--) {
+        if (acts[i].predecessors.includes(activity)) {
+          acts[i].predecessors = acts[i].predecessors.filter(
+            (item) => item !== activity
+          );
+        }
+      }
+    } else if (clickedLeftBox(acts[i])) {
+      acts[i].predecessors = [];
     }
+  }
+}
+
+function clickedMainBox(activity) {
+  if (
+    mouseX > activity.x &&
+    mouseX < activity.x + activity.width &&
+    mouseY > activity.y &&
+    mouseY < activity.y + activity.height
+  ) {
+    return true;
+  }
+}
+
+function clickedRightBox(activity) {
+  if (
+    mouseX > activity.x + activity.width &&
+    mouseX < activity.x + activity.width + activity.side_width &&
+    mouseY > activity.y &&
+    mouseY < activity.y + activity.height
+  ) {
+    return true;
+  }
+}
+
+function clickedLeftBox(activity) {
+  if (
+    mouseX > activity.x - activity.side_width &&
+    mouseX < activity.x &&
+    mouseY > activity.y &&
+    mouseY < activity.y + activity.height
+  ) {
+    return true;
   }
 }

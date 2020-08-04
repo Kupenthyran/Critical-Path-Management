@@ -14,18 +14,47 @@ class Activity {
     this.LS = 0;
     this.LF = 0;
     this.slack = 0;
+    this.side_width = 20;
   }
 
   showActivity() {
-    fill(200, 0, 200);
     noStroke();
     if (this.selected) {
       this.x -= pmouseX - mouseX;
       this.y -= pmouseY - mouseY;
-      rect(this.x, this.y, this.width, this.height);
-    } else {
-      rect(this.x, this.y, this.width, this.height);
     }
+
+    //main box
+    fill(200, 0, 200);
+    rect(this.x, this.y, this.width, this.height);
+
+    fill(200, 200, 0);
+
+    if (
+      // mouse over left box, highlight
+      mouseX > this.x - this.side_width &&
+      mouseX < this.x &&
+      mouseY > this.y &&
+      mouseY < this.y + this.height
+    ) {
+      fill(255, 255, 0);
+    }
+
+    rect(this.x - this.side_width, this.y, this.side_width, this.height);
+
+    fill(200, 200, 0);
+    if (
+      // mouse over right box, highlight
+      mouseX > this.x + this.width &&
+      mouseX < this.x + this.width + this.side_width &&
+      mouseY > this.y &&
+      mouseY < this.y + this.height
+    ) {
+      fill(255, 255, 0);
+    }
+
+    rect(this.x + this.width, this.y, this.side_width, this.height);
+
     fill(255);
     textAlign(CENTER);
     textSize(30);
