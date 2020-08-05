@@ -10,6 +10,11 @@
 
 <body>
 
+  <!-- <div class="activity-box">
+  
+  </div> -->
+
+  <div id="canvas-container" style="position: relative;"></div>
 </body>
 
 </html>
@@ -21,5 +26,61 @@
   html,
   body {
     background-color: rgb(255, 255, 255);
+    padding: 0;
+    margin: 10px;
+    box-sizing: border-box;
+  }
+
+
+
+  input {
+    border: none;
+    text-align: center;
+    outline: none;
+    width: 100%;
+    background: transparent;
+    user-select: none;
+
+  }
+
+  button {
+    user-select: none;
+    width: 10px !important;
+    border: none;
+
+  }
+
+  #duration {
+    width: 25px;
+  }
+
+
+  .activity-box {
+    display: flex;
+    background-color: rgba(150, 224, 243, 0.8);
+    flex-direction: column;
+    border: 1px solid blue;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+  }
+
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .row :first-child,
+  .row :last-child {
+    width: 100%;
+  }
+
+  .row>div {
+    background-color: transparent;
+    border: 1px solid blue;
+    padding: 5px;
+    text-align: center;
+    user-select: none;
   }
 </style>

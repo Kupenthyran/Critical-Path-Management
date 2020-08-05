@@ -1,50 +1,76 @@
-//Next TODO: Add 'add more activity' feature
-
 var acts = [];
 var clickedActs = {};
 var mouseDown = false;
 
-function setup() {
-  createCanvas(700, 500);
+let activityHTML = `
+      <div class="row">
+        <div class="ES">ES</div>
+        <div>
+          <input id="duration" autocomplete="off" type="text" placeholder="D">
+        </div>
+        <div class="EF">EF</div>
+      </div>
 
-  let x;
-  let y;
-  for (var i = 0; i < 4; i++) {
-    x = random(0, width - 100);
-    y = random(0, height - 100);
-    acts.push(new Activity(i + 1, x, y));
-  }
+      <div class="row">
+      <button id="left-btn"></button>
+        <div>
+          <input class="activity-name" type="text" autocomplete="off" placeholder="activity name">
+        </div>
+        <button id="right-btn"></button>
+      </div>
+
+      <div class="row">
+        <div class="LS">LS</div>
+        <div class="slack">Slack</div>
+        <div class="LF">LF</div>
+      </div>
+`;
+
+function setup() {
+  var canvas = createCanvas(1300, 600);
+  canvas.parent("canvas-container");
 }
 
 function draw() {
   background(51);
 
-  if (mouseDown) {
+  noStroke();
+  fill(255, 100, 100);
+  rect(0, 0, 200, height);
+  fill(255, 100, 0);
+  rect(0 + 20, 0 + 20, 200 - 40, 100);
+
+  for (var i = 0; i < acts.length; i++) {
+    acts[i].show();
+  }
+
+  if (mouseDown && Object.keys(clickedActs).length == 1) {
     stroke(255);
     strokeWeight(5);
+
     if (clickedActs.left) {
+      var elemHeight = clickedActs.left.element.elt.getBoundingClientRect()
+        .height;
       line(
         clickedActs.left.x,
-        clickedActs.left.y + clickedActs.left.height / 2,
-        mouseX,
-        mouseY
-      );
-    } else if (clickedActs.right) {
-      line(
-        clickedActs.right.x + clickedActs.right.width,
-        clickedActs.right.y + clickedActs.right.height / 2,
+        clickedActs.left.y + elemHeight / 2,
         mouseX,
         mouseY
       );
     }
-  }
 
-  for (var i = 0; i < acts.length; i++) {
-    acts[i].showEdges();
-  }
-
-  for (var i = 0; i < acts.length; i++) {
-    acts[i].showActivity();
+    if (clickedActs.right) {
+      var elemHeight = clickedActs.right.element.elt.getBoundingClientRect()
+        .height;
+      var elemWidth = clickedActs.right.element.elt.getBoundingClientRect()
+        .width;
+      line(
+        clickedActs.right.x + elemWidth,
+        clickedActs.right.y + elemHeight / 2,
+        mouseX,
+        mouseY
+      );
+    }
   }
 }
 
@@ -56,39 +82,29 @@ function checkConnection() {
   ) {
     clickedActs.left.predecessors.push(clickedActs.right);
   }
-
   clickedActs = {};
 }
 
 function mousePressed() {
-  mouseDown = true;
-  for (var i = acts.length - 1; i >= 0; i--) {
-    if (clickedMainBox(acts[i])) {
-      acts[i].selected = true;
-      acts.push(acts[i]);
-      var index = acts.indexOf(acts[i]);
-      acts.splice(index, 1);
-      break;
-    } else if (clickedRightBox(acts[i])) {
-      clickedActs.right = acts[i];
-    } else if (clickedLeftBox(acts[i])) {
-      clickedActs.left = acts[i];
-    }
+  if (mouseX > 20 && mouseX < 180 && mouseY > 20 && mouseY < 120) {
+    let actDiv = createDiv(activityHTML)
+      .addClass("activity-box")
+      .parent("canvas-container");
+
+    acts.push(new Activity(actDiv));
+    // print(divTest.elt.querySelector("#ES"));
   }
+
+  mouseDown = true;
 }
 
 function mouseReleased() {
   mouseDown = false;
+
+  checkConnection();
   for (var i = acts.length - 1; i >= 0; i--) {
     acts[i].selected = false;
-
-    if (clickedRightBox(acts[i])) {
-      clickedActs.right = acts[i];
-    } else if (clickedLeftBox(acts[i])) {
-      clickedActs.left = acts[i];
-    }
   }
-  checkConnection();
 }
 
 function doubleClicked() {
@@ -105,38 +121,5 @@ function doubleClicked() {
     } else if (clickedLeftBox(acts[i])) {
       acts[i].predecessors = [];
     }
-  }
-}
-
-function clickedMainBox(activity) {
-  if (
-    mouseX > activity.x &&
-    mouseX < activity.x + activity.width &&
-    mouseY > activity.y &&
-    mouseY < activity.y + activity.height
-  ) {
-    return true;
-  }
-}
-
-function clickedRightBox(activity) {
-  if (
-    mouseX > activity.x + activity.width &&
-    mouseX < activity.x + activity.width + activity.side_width &&
-    mouseY > activity.y &&
-    mouseY < activity.y + activity.height
-  ) {
-    return true;
-  }
-}
-
-function clickedLeftBox(activity) {
-  if (
-    mouseX > activity.x - activity.side_width &&
-    mouseX < activity.x &&
-    mouseY > activity.y &&
-    mouseY < activity.y + activity.height
-  ) {
-    return true;
   }
 }
