@@ -77,7 +77,7 @@ class Activity {
         i
       ].element.elt.getBoundingClientRect().height;
 
-      stroke(255);
+      stroke("rgba(183, 213, 221, 1)");
       strokeWeight(5);
       line(
         this.x,

@@ -157,6 +157,7 @@ function updateLateParams(act) {
 }
 
 function draw() {
+  background("#4a438a");
 
   for (var i = 0; i < acts.length; i++) {
     acts[i].show();
@@ -167,7 +168,7 @@ function draw() {
 
 function drawDragLine() {
   if (mouseDown && Object.keys(clickedActs).length == 1) {
-    stroke(255);
+    stroke("rgba(183, 213, 221, 1)");
     strokeWeight(5);
 
     if (clickedActs.left) {
