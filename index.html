@@ -14,7 +14,8 @@
   
   </div> -->
 
-  <div id="canvas-container" style="position: relative;"></div>
+  <div id="canvas-container" style="position: relative;">
+  </div>
 </body>
 
 </html>
@@ -25,10 +26,11 @@
 <style>
   html,
   body {
-    background-color: rgb(255, 255, 255);
+    background: #4a438a;
+    background: linear-gradient(to right, #4a438a, #3e3977, #474774);
     padding: 0;
-    margin: 10px;
     box-sizing: border-box;
+    margin: 0;
   }
 
 
@@ -43,16 +45,43 @@
 
   }
 
-  button {
+  .row>button {
     user-select: none;
     width: 10px !important;
     border: none;
 
   }
 
-  #duration {
-    width: 25px;
+  .duration {
+    width: 25px !important;
   }
+
+
+  #calculate {
+    width: 130px;
+    user-select: none;
+
+    height: 40px;
+    outline: none;
+    font-size: 20px;
+    border: none;
+    background-color: rgba(96, 191, 214, 0.8);
+    border-radius: 20px;
+
+  }
+
+  #calculate:hover {
+    background-color: rgba(140, 214, 233, 0.8);
+    font-size: 22px;
+    cursor: pointer;
+
+  }
+
+  .activity-box:hover {
+    background-color: rgba(140, 214, 233, 8);
+
+  }
+
 
 
   .activity-box {
